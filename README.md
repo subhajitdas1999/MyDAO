@@ -1,13 +1,8 @@
 # MyDAO
-This DAO contract , where anyone can become a Investor. Investor has the ability to create a proposal , and vote for it .Only admin 
-
-of the DAO has the ability to execute a proposal after all the requirements met .
+This DAO contract , where anyone can become a Investor. Investor has the ability to create a proposal , and vote for it .Only admin of the DAO has the ability to execute a proposal after all the requirements met .
 
 Admin or investor should have a certain amount of share tokens ,to vote for a proposal (see MyDAOHelper.sol) .Every proposal has voting 
-
-time period, which is 1 week (604800 seconds) , in which every investor can vote with their respective share amount .Every proposal 
-
-should need the quorum 40%  for execution. An Investor can redeem his share percent and get back his investment.
+time period, which is 1 week (604800 seconds) , in which every investor can vote with their respective share amount .Every proposal should have the quorum 40% for execution. An Investor can redeem his share percent and get back his investment.
 
 PRICE OF SINGLE TOKEN = 10000000 wei
 
@@ -20,9 +15,7 @@ MINIMUM TOKENS NEED TO VOTE = 100
 ```
 function contribute() public payable {}
 ```
-By calling this function with some ether user can become an investor of the DAO . user will get back some tokens in wallet address ,as 
-
-an share amount .
+By calling this function with some ether user can become an investor of the DAO . user will get back some tokens in wallet address ,as an share amount .
 
 IF user send ether directly to the DAO contract ,the internally this function gets called.
 
