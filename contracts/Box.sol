@@ -4,10 +4,6 @@ pragma solidity ^0.8.13;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-/*{
-	"0": "uint256: 36348085178222983392456617670535241478612241265971707191723330344148927949749"
-}*/
-
 
 contract Box is Ownable{
     uint256 private value;

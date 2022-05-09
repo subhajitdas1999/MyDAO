@@ -10,12 +10,26 @@ import "@openzeppelin/contracts/governance/extensions/GovernorVotes.sol"; // int
 import "@openzeppelin/contracts/governance/extensions/GovernorVotesQuorumFraction.sol";
 import "@openzeppelin/contracts/governance/extensions/GovernorTimelockControl.sol";
 
-contract MyGovernor is Governor, GovernorSettings, GovernorCountingSimple, GovernorVotes, GovernorVotesQuorumFraction, GovernorTimelockControl {
-    constructor(IVotes _token, TimelockController _timelock)
+contract MyGovernor is
+    Governor,
+    GovernorSettings,
+    GovernorCountingSimple,
+    GovernorVotes,
+    GovernorVotesQuorumFraction,
+    GovernorTimelockControl
+{
+    constructor(
+        IVotes _token,
+        TimelockController _timelock,
+        uint256 _votingDelay, //in block
+        uint256 _votingPeriod, //in block
+        uint256 _proposalThreshold,
+        uint256 _quorumPercentage
+    )
         Governor("MyGovernor")
-        GovernorSettings(0 /* 1 block */, 20 /* 1 week */, 0) //voting delay (delay since proposal is creating and voting is started) is 1 block , voting period (how long vote should go for) = 1 week , propsal thresold (Minimum number of votes an account must have to create a proposal.)
+        GovernorSettings(_votingDelay, _votingPeriod, _proposalThreshold) //voting delay (delay since proposal is creating and voting is started) is 1 block , voting period (how long vote should go for) = 1 week , propsal thresold (The number of votes required in order for a voter to become a proposer)
         GovernorVotes(_token)
-        GovernorVotesQuorumFraction(0)
+        GovernorVotesQuorumFraction(_quorumPercentage) //Quorum :- Minimum number of cast voted required for a proposal to be successful. GovernorVotesQuorumFraction :- Combines with GovernorVotes to set the quorum as a fraction of the total token supply.
         GovernorTimelockControl(_timelock)
     {}
 
@@ -57,11 +71,12 @@ contract MyGovernor is Governor, GovernorSettings, GovernorCountingSimple, Gover
         return super.state(proposalId);
     }
 
-    function propose(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, string memory description)
-        public
-        override(Governor, IGovernor)
-        returns (uint256)
-    {
+    function propose(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        string memory description
+    ) public override(Governor, IGovernor) returns (uint256) {
         return super.propose(targets, values, calldatas, description);
     }
 
@@ -74,18 +89,22 @@ contract MyGovernor is Governor, GovernorSettings, GovernorCountingSimple, Gover
         return super.proposalThreshold();
     }
 
-    function _execute(uint256 proposalId, address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
-        internal
-        override(Governor, GovernorTimelockControl)
-    {
+    function _execute(
+        uint256 proposalId,
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) internal override(Governor, GovernorTimelockControl) {
         super._execute(proposalId, targets, values, calldatas, descriptionHash);
     }
 
-    function _cancel(address[] memory targets, uint256[] memory values, bytes[] memory calldatas, bytes32 descriptionHash)
-        internal
-        override(Governor, GovernorTimelockControl)
-        returns (uint256)
-    {
+    function _cancel(
+        address[] memory targets,
+        uint256[] memory values,
+        bytes[] memory calldatas,
+        bytes32 descriptionHash
+    ) internal override(Governor, GovernorTimelockControl) returns (uint256) {
         return super._cancel(targets, values, calldatas, descriptionHash);
     }
 
@@ -107,4 +126,3 @@ contract MyGovernor is Governor, GovernorSettings, GovernorCountingSimple, Gover
         return super.supportsInterface(interfaceId);
     }
 }
-
