@@ -12,7 +12,7 @@ const {
   moveBlocks,
 } = require("../utils/VarAndFunctions");
 
-const description = "i love";
+const description = "";
 
 describe("Governor contract & Box contract", () => {
   let deployer;
@@ -50,7 +50,7 @@ describe("Governor contract & Box contract", () => {
 
     //delegate deployer address
     await votingToken.delegate(deployer.address);
-    await votingToken.delegate(addr1.address);
+    // await votingToken.delegate(addr1.address);
 
     //set up all roles
     const proposerRole = await timeLock.PROPOSER_ROLE();
@@ -91,16 +91,14 @@ describe("Governor contract & Box contract", () => {
 
     //need to move the blocks
     await moveBlocks(VOTING_DELAY);
-
     // vote 0 -> against, 1-> For, 2 -> abstain
     let voteTx = await governor.castVoteWithReason(proposalId, "1", "you");
-    
 
-    
     proposalState = await governor.state(proposalId);
 
     //need to move the blocks
     await moveBlocks(VOTING_PERIOD);
+    proposalState = await governor.state(proposalId);
 
     const descriptionHash = ethers.utils.keccak256(
       ethers.utils.toUtf8Bytes(description)
@@ -115,7 +113,7 @@ describe("Governor contract & Box contract", () => {
       descriptionHash
     );
 
-    //need to move Time
+    // //need to move Time
     await moveTime(MIN_DELAY);
 
     const executeTx = await governor.execute(
